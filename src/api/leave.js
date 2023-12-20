@@ -7,6 +7,13 @@ export function getLeaveNo() {
   })
 }
 
+export function getClassTeach() {
+  return request({
+    url: '/leave/getClassTeach',
+    method: 'get'
+  })
+}
+
 export function newLeave(data) {
   return request({
     url: '/leave/newLeave',
@@ -20,5 +27,13 @@ export function queryLeave(data) {
     url: '/leave/queryLeave',
     method: 'post',
     params: data
+  })
+}
+
+export function queryLeaveDetail(data) {
+  return request({
+    url: '/leave/queryLeaveDetail',
+    method: 'get',
+    params: {id: data}
   })
 }

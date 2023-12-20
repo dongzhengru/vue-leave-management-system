@@ -76,8 +76,8 @@
 
       <!-- 审批人 -->
       <el-form-item label="审批流程">
-        <el-steps direction="vertical" :active="activeStep" finish-status="process" align-center>
-          <el-step v-for="(step, index) in approvalProcess" :key="index" :title="step.title" :description="step.description"></el-step>
+        <el-steps direction="vertical" :active="activeStep" :space="80" finish-status="process" align-center>
+          <el-step v-for="(step, index) in approvalProcess" :key="index" :title="step.title" :description="step.description">111</el-step>
         </el-steps>
         <el-select
           v-model="approvalValue"
@@ -96,6 +96,7 @@
           </el-option>
         </el-select>
         <el-button @click="addApprover" type="text">+ 添加审批人</el-button>
+        <el-button @click="initApprover" type="text" style="color: red;">清空审批人</el-button>
       </el-form-item>
 
       <!-- 抄送人 -->
@@ -103,6 +104,7 @@
         <el-tag v-for="ccPerson in leaveForm.ccPersons" style="margin-right: 8px" :key="ccPerson.username" closable @close="removeCCPerson(ccPerson)">
           {{ ccPerson.realName }}
         </el-tag>
+        <el-tag type="info" v-if="leaveForm.ccPersons.length === 0">无抄送人</el-tag>
         <br>
         <el-select
           v-model="ccValue"
@@ -134,7 +136,7 @@
 <script>
 import {mapGetters} from "vuex";
 import {getTeacherList} from "@/api/user";
-import {getLeaveNo, newLeave} from "@/api/leave";
+import {getClassTeach, getLeaveNo, newLeave} from "@/api/leave";
 
 export default {
   data() {
@@ -154,22 +156,16 @@ export default {
         leaveType: '', // 请假类型
         affectsNightSelfStudy: false, // 是否影响晚自习
         remark: '', // 备注
-        ccPersons: [
-          { realName: '唐红军', username: '40275' },
-          { realName: '郭迪', username: '20221046' }
-        ] // 抄送人
+        ccPersons: [] // 抄送人
       },
-      approvalProcess: [
-        { title: '张弘祖', description: '辅导员', username: '20221058'},
-        { title: '王朔', description: '分院教务办', username: '20221061'},
-        { title: '张海平', description: '分院院长', username: '29011'}
-      ]
+      approvalProcess: []
     };
   },
   created() {
     getLeaveNo().then(response => {
       this.leaveForm.leaveNo = response.data.leaveNo
     })
+    this.initApprover()
   },
   computed: {
     ...mapGetters([
@@ -200,6 +196,13 @@ export default {
         this.approvalOptions = [];
       }
     },
+    initApprover() {
+      this.approvalProcess = []
+      getClassTeach().then(response => {
+        const initApprover = {title: response.data.realName, description: '辅导员', username: response.data.username}
+        this.approvalProcess.push(initApprover);
+      })
+    },
     addApprover() {
       // 在这里添加新的审批人到审批流程数组
       const newApprover = { title: this.approvalValue,
@@ -207,6 +210,9 @@ export default {
         username: this.approvalOptions.find(option => option.value === this.approvalValue).username};
       this.approvalProcess.push(newApprover);
       this.approvalValue = []
+    },
+    removeCCPerson(ccPersonToRemove) {
+      this.leaveForm.ccPersons = this.leaveForm.ccPersons.filter(ccPerson => ccPerson !== ccPersonToRemove);
     },
     addCC() {
       this.leaveForm.ccPersons.push({
