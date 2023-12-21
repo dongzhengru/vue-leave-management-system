@@ -148,7 +148,7 @@
 <script>
 
 import {mapGetters} from "vuex";
-import {getAllUser, resetPwd} from "@/api/userMana";
+import {getAllUser, resetPwd} from "@/api/SystemMana";
 
 export default {
   name: "UserMana",

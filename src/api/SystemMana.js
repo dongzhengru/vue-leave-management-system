@@ -23,3 +23,10 @@ export function resetPwd(id) {
     params: {id: id}
   })
 }
+
+export function getAllUnit() {
+  return request({
+    url: '/system/getAllUnit',
+    method: 'get'
+  })
+}
