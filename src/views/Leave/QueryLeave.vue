@@ -107,7 +107,7 @@
           width="100">
           <template slot-scope="scope">
             <el-button
-              @click.native.prevent="checkRow(scope.row.id, tableData)"
+              @click.native.prevent="checkRow(scope.row.id)"
               type="primary"
               size="small">
               详情
@@ -193,7 +193,11 @@
                   </div>
                   <div class="status-time" style="margin-top: 5px">
                     <span style="font-size: 13px;">{{ getStatusText(person.status) }}</span>
-                    <span style="float: right;font-size: 13px;">{{ person.completeTime || '等待审批' }}</span>
+                    <span style="float: right;font-size: 13px;">{{ person.completeTime != null ? '审批时间：' + person.completeTime : '无审批时间' }}</span>
+                  </div>
+                  <div class="reason" style="margin-top: 5px">
+                    <span style="float: right;font-size: 13px;margin-right: 80px;"></span>
+                    <span style="font-size: 13px;">审批意见：{{ person.reason }}</span>
                   </div>
                 </el-card>
               </el-col>
@@ -265,7 +269,7 @@ export default {
       this.form.page = newPage;
       this.initData(this.form)
     },
-    checkRow(index, rows) {
+    checkRow(index) {
       queryLeaveDetail(index).then(response => {
         if (response.code === 200) {
           this.detailData = response.data
