@@ -7,3 +7,19 @@ export function modifyPwd(data) {
     data
   })
 }
+
+export function getAllUser(data) {
+  return request({
+    url: '/system/getAllUser',
+    method: 'get',
+    params: data
+  })
+}
+
+export function resetPwd(id) {
+  return request({
+    url: '/system/resetPwd',
+    method: 'get',
+    params: {id: id}
+  })
+}
