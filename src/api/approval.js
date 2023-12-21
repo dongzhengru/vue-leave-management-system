@@ -7,3 +7,11 @@ export function agreeApproval(data) {
     data
   })
 }
+
+export function rejectApproval(data) {
+  return request({
+    url: '/approval/reject',
+    method: 'post',
+    data
+  })
+}

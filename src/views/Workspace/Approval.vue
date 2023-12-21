@@ -163,7 +163,7 @@
         </el-descriptions>
         <el-descriptions title="审批进度" :column="1" style="margin-top: 20px;">
         </el-descriptions>
-        <el-steps direction="vertical" :active="activeStep" :space="80" finish-status="success" align-center>
+        <el-steps direction="vertical" :active="activeStep" :process-status="processStatus" :space="80" finish-status="success" align-center>
           <el-step v-for="(step, index) in approvalProcess" :key="index" :title="step.title" :description="step.description"></el-step>
         </el-steps>
         <el-button
@@ -215,7 +215,7 @@
             通过
           </el-button>
           <el-button
-            @click.native.prevent="refuse()"
+            @click.native.prevent="reject()"
             type="danger"
             style="width: 180px;" size="medium">
             驳回
@@ -228,7 +228,7 @@
 
 <script>
 import {queryLeave, queryLeaveDetail} from "@/api/leave";
-import {agreeApproval} from "@/api/approval";
+import {agreeApproval, rejectApproval} from "@/api/approval";
 
 export default {
   name: "Approval",
@@ -248,6 +248,7 @@ export default {
       drawer1: false,
       drawer2: false,
       activeStep: 0,
+      processStatus: 'process',
       approvalProcess: []
     }
   },
@@ -288,6 +289,7 @@ export default {
       this.initData(this.form)
     },
     checkRow(index) {
+      this.processStatus = 'process'
       queryLeaveDetail(index).then(response => {
         if (response.code === 200) {
           this.detailData = response.data
@@ -311,6 +313,12 @@ export default {
           });
 
           this.activeStep = parseInt(response.data.nowOrder) - 1
+          if (this.detailData.status === 1) {
+            this.processStatus = 'success'
+          }
+          if (this.approvalProcess[parseInt(this.activeStep)].status === -1) {
+            this.processStatus = 'error'
+          }
           this.drawer1 = true
         }
       })
@@ -319,7 +327,7 @@ export default {
       this.drawer2 = true
     },
     agree(){
-      this.$prompt('请输入审批意见', '提示', {
+      this.$prompt('请输入通过审批意见', '提示', {
         type: 'info',
         confirmButtonText: '确定',
         cancelButtonText: '取消',
@@ -355,8 +363,42 @@ export default {
         });
       });
     },
-    refuse() {
-
+    reject() {
+      this.$prompt('请输入驳回审批意见', '提示', {
+        type: 'warning',
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        closeOnClickModal: false,
+        closeOnPressEscape: false
+      }).then(({ value }) => {
+        this.drawer1 = false
+        this.drawer2 = false
+        const rejectData = new FormData()
+        rejectData.append("id", this.detailData.id)
+        rejectData.append("reason", value)
+        rejectApproval(rejectData).then(response => {
+          if (response.code === 200) {
+            this.$message({
+              message: response.msg,
+              type: 'success'
+            })
+          } else {
+            this.$message({
+              message: response.msg,
+              type: 'error'
+            })
+          }
+        })
+        setTimeout(() => {
+          this.search();
+          this.checkRow(this.detailData.id)
+        }, 500)
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消操作'
+        });
+      });
     }
   }
 }
