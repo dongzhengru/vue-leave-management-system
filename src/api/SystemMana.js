@@ -30,3 +30,10 @@ export function getAllUnit() {
     method: 'get'
   })
 }
+
+export function getAllClass() {
+  return request({
+    url: '/system/getAllClass',
+    method: 'get'
+  })
+}
