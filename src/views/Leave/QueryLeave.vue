@@ -163,7 +163,7 @@
         </el-descriptions>
         <el-descriptions title="审批进度" :column="1" style="margin-top: 20px;">
         </el-descriptions>
-        <el-steps direction="vertical" :active="activeStep" :space="80" finish-status="success" align-center>
+        <el-steps direction="vertical" :active="activeStep"  :process-status="processStatus" :space="80" finish-status="success" align-center>
           <el-step v-for="(step, index) in approvalProcess" :key="index" :title="step.title" :description="step.description"></el-step>
         </el-steps>
         <el-button
@@ -230,6 +230,7 @@ export default {
       drawer1: false,
       drawer2: false,
       activeStep: 0,
+      processStatus: 'process',
       approvalProcess: []
     }
   },
@@ -270,6 +271,7 @@ export default {
       this.initData(this.form)
     },
     checkRow(index) {
+      this.processStatus = 'process'
       queryLeaveDetail(index).then(response => {
         if (response.code === 200) {
           this.detailData = response.data
@@ -292,6 +294,12 @@ export default {
           });
 
           this.activeStep = parseInt(response.data.nowOrder) - 1
+          if (this.detailData.status === 1) {
+            this.processStatus = 'success'
+          }
+          if (this.approvalProcess[parseInt(this.activeStep)].status === -1) {
+            this.processStatus = 'error'
+          }
           this.drawer1 = true
         }
       })

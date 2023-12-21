@@ -22,3 +22,10 @@ export function countUnFinished() {
     method: 'get'
   })
 }
+
+export function statistic() {
+  return request({
+    url: '/approval/statistic',
+    method: 'get'
+  })
+}
