@@ -1,6 +1,6 @@
 import Cookies from 'js-cookie'
 
-const TokenKey = 'zd_evaluating_system_token'
+const TokenKey = 'leave_management_system_token'
 
 export function getToken() {
   return Cookies.get(TokenKey)

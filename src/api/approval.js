@@ -15,3 +15,10 @@ export function rejectApproval(data) {
     data
   })
 }
+
+export function countUnFinished() {
+  return request({
+    url: '/approval/unFinished',
+    method: 'get'
+  })
+}

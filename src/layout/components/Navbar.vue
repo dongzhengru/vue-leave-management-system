@@ -25,7 +25,10 @@
       </el-dropdown>
     </div>
     <div class="right-content">
-      <p class="userInfo">
+      <p class="right-custom-info">
+        <el-badge v-if="isTeacher === 1" :value="unFinished" class="item" style="margin-right: 15px">
+          <el-button icon="el-icon-bell" type="primary" size="mini" @click="toApproval">待审批</el-button>
+        </el-badge>
         当前登录：{{ name }}
       </p>
     </div>
@@ -36,11 +39,12 @@
 import { mapGetters } from 'vuex'
 import Breadcrumb from '@/components/Breadcrumb'
 import Hamburger from '@/components/Hamburger'
+import {countUnFinished} from "@/api/approval";
 
 export default {
   data() {
     return {
-      termNo: 0,
+      unFinished: ''
     }
   },
   components: {
@@ -48,12 +52,18 @@ export default {
     Hamburger
   },
   created() {
+    countUnFinished().then(response => {
+      if (response.data.unFinished > 0) {
+        this.unFinished = response.data.unFinished
+      }
+    })
   },
   computed: {
     ...mapGetters([
       'sidebar',
       'avatar',
       'name',
+      'isTeacher'
     ])
   },
   methods: {
@@ -63,6 +73,9 @@ export default {
     async logout() {
       await this.$store.dispatch('user/logout')
       this.$router.push(`/login`)
+    },
+    toApproval() {
+      this.$router.push(`/workspace/approval`)
     }
   }
 }
@@ -152,7 +165,7 @@ export default {
   margin-right: 20px;
   line-height: 20px;
 }
-.userInfo {
+.right-custom-info {
   font-weight: 300;
   white-space: pre;
 }
