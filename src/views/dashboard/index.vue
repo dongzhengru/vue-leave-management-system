@@ -28,11 +28,9 @@ export default {
   },
   created() {
     countUnFinished().then(response => {
-      if (response.data.unFinished > 0) {
-        this.unFinished = response.data.unFinished
-        if (this.isTeacher === 1) {
-          this.message += '，您有' + this.unFinished + '个待审批任务'
-        }
+      this.unFinished = response.data.unFinished
+      if (this.isTeacher === 1) {
+        this.message += '，您有' + this.unFinished + '个待审批任务。'
       }
     })
     setTimeout(() => {
