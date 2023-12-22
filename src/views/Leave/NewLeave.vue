@@ -145,7 +145,7 @@ export default {
       approvalValue: [],
       ccValue: [],
       loading: false,
-      states: ["张弘祖", "张海平", "王朔"],
+      states: [],
       activeStep: 99,
       showDropdown: true,
       fileList: [],
@@ -258,7 +258,7 @@ export default {
       this.fileList.push(option)
     },
     handleExceed(files, fileList) {
-      this.$message.warning(`最多上传 1 个文件，本次选择了 ${files.length + fileList.length} 个文件`);
+      this.$message.warning(`最多上传 5 个文件，本次选择了 ${files.length + fileList.length} 个文件`);
     },
     beforeRemove(file) {
       return this.$confirm(`确定移除 ${ file.name }？`);

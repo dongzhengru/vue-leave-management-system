@@ -9,4 +9,5 @@ export const asyncRouteMenu = {
   "UserMana": () => import('@/views/System/UserMana.vue'),
   "UnitMana": () => import('@/views/System/UnitMana.vue'),
   "ClassMana": () => import('@/views/System/ClassMana.vue'),
+  "ModifyPwd": () => import('@/views/System/ModifyPwd')
 }
