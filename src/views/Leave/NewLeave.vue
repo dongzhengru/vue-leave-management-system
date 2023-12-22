@@ -242,6 +242,9 @@ export default {
             message: response.msg,
             type: 'success'
           })
+          setTimeout(() => {
+            this.$router.push(`/leave/queryLeave`)
+          }, 500)
         } else {
           this.$message({
             message: response.msg,
