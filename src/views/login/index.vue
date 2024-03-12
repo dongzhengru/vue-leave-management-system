@@ -13,7 +13,7 @@
         <el-input
           ref="username"
           v-model="loginForm.username"
-          placeholder="用户名"
+          placeholder="学号/工号"
           name="username"
           type="text"
           tabindex="1"
